@@ -1,0 +1,61 @@
+body{
+    background: #333;
+    color: #fff;
+}
+
+.navbar {
+    border-bottom: #008ed6 3px solid;
+    opacity: 0.8;
+}
+
+img.nav-link {
+    width: 52px;
+    height: 52px;
+}
+
+#home-section {
+    background: url('../img/home.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 700px;
+}
+
+#home-section .dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 700px;
+    background-color: rgba(0,0,0, 0.7);
+}
+
+#home-section .home-inner {
+    padding-top: 150px;
+}
+/* HIDE RADIO */
+[type=radio] { 
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* IMAGE STYLES */
+  [type=radio] + img {
+    cursor: pointer;
+    opacity: 0.5;
+    padding: 2px;
+  }
+  
+  /* CHECKED STYLES */
+  [type=radio]:checked + img {
+    border: 2px solid rgb(104, 98, 98) ;
+    border-radius: 45px;
+    opacity: 1;
+    padding: 0;
+  }
+  .vote-saved {
+      background-color: seagreen;
+      color: seashell;
+  }
