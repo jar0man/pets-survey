@@ -22,7 +22,6 @@ img.nav-link {
 }
 
 #home-section .dark-overlay {
-    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
