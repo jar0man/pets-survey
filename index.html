@@ -10,9 +10,13 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
     crossorigin="anonymous">
   <link rel="stylesheet" href="css/style.css">
-  <title>Bootstrap Theme</title>
+  <link rel="shortcut icon" href="favicon.ico" />
+  <title>Pets Survey</title>
   <script src="https://d3js.org/d3.v3.min.js"></script>
-  <script src="js/pie-chart.js"></script>
+  <link rel="stylesheet" href="css/leaflet.css" />
+   
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="js/pie-chart.js"></script>
 </head>
 
 <body>
@@ -107,7 +111,7 @@
             <div class="col-md-6">
                 <h3>Answering</h3>
                 <p>
-                    Come on! Click on the picture of your favorite pet and click the button. 
+                    Come on! Click on the picture of your favourite pet and click the button. 
                     The answer will be send to our servers. Don't worry if you send a wrong animal,
                     we will save your last answer only.
                 </p>
@@ -116,7 +120,7 @@
                    <!-- <div class="d-flex">
                         <div class="p-4 align-self-start">
                           <label>
-                            <input type="radio" value="dog" name="favoritePet" checked>
+                            <input type="radio" value="dog" name="favouritePet" checked>
                             <img src="img\64px-dog.png">
                          </label>
                         </div>
@@ -128,19 +132,19 @@
                     <div class="row">
                         <div class="col">
                             <label>
-                                    <input type="radio" value="dog" name="favoritePet" checked>
+                                    <input type="radio" value="dog" name="favouritePet" checked>
                                     <img src="img\64px-dog.png">
                             </label>
                         </div>
                         <div class="col">
                             <label>
-                                    <input type="radio" value="cat" name="favoritePet" >
+                                    <input type="radio" value="cat" name="favouritePet" >
                                     <img src="img\64px-cat.png">
                             </label>
                         </div>
                         <div class="col">
                                 <label>
-                                        <input type="radio" value="bird" name="favoritePet" >
+                                        <input type="radio" value="bird" name="favouritePet" >
                                         <img src="img\64px-bird.png">
                                 </label>
                         </div>
@@ -148,19 +152,19 @@
                     <div class="row">
                         <div class="col">
                             <label>
-                                    <input type="radio" value="turtle" name="favoritePet" >
+                                    <input type="radio" value="turtle" name="favouritePet" >
                                     <img src="img\64px-turtle.png">
                             </label>
                         </div>
                         <div class="col">
                             <label>
-                                    <input type="radio" value="duck" name="favoritePet" >
+                                    <input type="radio" value="duck" name="favouritePet" >
                                     <img src="img\64px-duck.png">
                             </label>
                         </div>
                         <div class="col">
                                 <label>
-                                        <input type="radio" value="fish" name="favoritePet" >
+                                        <input type="radio" value="fish" name="favouritePet" >
                                         <img src="img\64px-fish.png">
                                 </label>
                         </div>
@@ -168,19 +172,19 @@
                     <div class="row">
                         <div class="col">
                             <label>
-                                    <input type="radio" value="mouse" name="favoritePet" >
+                                    <input type="radio" value="mouse" name="favouritePet" >
                                     <img src="img\64px-mouse.png">
                             </label>
                         </div>
                         <div class="col">
                             <label>
-                                    <input type="radio" value="snake" name="favoritePet" >
+                                    <input type="radio" value="snake" name="favouritePet" >
                                     <img src="img\64px-snake.png" >
                             </label>
                         </div>
                         <div class="col">
                                 <label>
-                                        <input type="radio" value="koala" name="favoritePet" >
+                                        <input type="radio" value="koala" name="favouritePet" >
                                         <img src="img\64px-koala.png">
                                 </label>
                         </div>
@@ -188,13 +192,12 @@
                   </div><!--container-->
 
                 </form>
-                <div class="text-center py-3"><h3 class="btn btn-outline-secondary" id="favoritePetText" onclick="vote()">
+                <div class="text-center py-3"><h3 class="btn btn-primary" id="favouritePetText" onclick="vote()">
                 </h3></div>
             </div>
                 
             </div>
         </div>
-    </div>
 </section> <!-- End Survey Section -->
 <!-- RESULT HEAD --> 
 <section id="result-head-section" class="bg-primary">
@@ -202,7 +205,7 @@
         <div class="row">
             <div class="col bg-blue text-center py-5">
                 <h1 class="display-5">Result</h1>
-                <p class="lead">Let's see how your favorite pet is doing it. 
+                <p class="lead">Let's see how your favourite pet is doing it. 
                     We can evaluate them for each country, city... or globally.                     
                 </p>
                 <a href="#result-section" class="btn btn-outline-light">Find Out More</a>
@@ -213,23 +216,24 @@
 <!-- RESULT SECTION-->
 <section id="result-section" class="bg-light text-muted py-5">
     <div class="container">
-        <div class="row">            
-                <div class="col-md-6" style='width: 500px; height:500px;'>                
+        <div class="row" id="main-result">            
+                <div class="col-md-6" id="graph-container">                
                          <!--<div class="d-flex" id="pie_chart" style='border: 1px solid red; width: 100%;padding:0;'>
                              <script>draw_pie_chart();</script></div>-->
                             <svg class="scaling-svg"  id="pie_chart" > 
                                 <!-- SVG content -->
-                                <script>loadSummaryData();</script>
                             </svg>
-                </div>
+                            <span  id="country-graph"> Global </span>   
+                </div> 
+                            
                 <div class="col-md-6">
-                    <h3>Summary</h3>
-                    <p>
-                        Summary results!
-                    </p>
-                    
-                </div>
                 
+                    <h3>Summary</h3>
+                        <div id="map-results"></div>
+                </div>
+                <div class="col bg-blue text-center py-5">
+                    <a href="#main-result" class="btn btn-primary" onclick="loadSummaryData();">Refresh</a>
+                </div>
             </div>
         </div>
 </section> <!-- End Result Section -->
@@ -242,35 +246,71 @@
     crossorigin="anonymous"></script>
 
   <script>
+    
     // Get the current year for the copyright
     $('#year').text(new Date().getFullYear());
     
-   // $('#favoritePetText').text(document.querySelector('input[name="favoritePet"]:checked').value)
+   // $('#favouritePetText').text(document.querySelector('input[name="favouritePet"]:checked').value)
     recalcText()
     function recalcText(){
-        button_text = "My Favorite: " + document.querySelector('input[name="favoritePet"]:checked').value;
-        $('#favoritePetText').text(button_text);        
-        $('#favoritePetText').removeClass("vote-saved");
-        $('#favoritePetText').removeClass("disabled");
+        button_text = "Send Vote: " + document.querySelector('input[name="favouritePet"]:checked').value;
+        $('#favouritePetText').text(button_text);        
+        $('#favouritePetText').removeClass("vote-saved");
+        $('#favouritePetText').removeClass("disabled");
     }
     function vote(){        
-        var favoritePet = document.querySelector('input[name="favoritePet"]:checked').value;
+        var favouritePet = document.querySelector('input[name="favouritePet"]:checked').value;
         var url = "https://api.handsonbigdata.com/survey";
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == XMLHttpRequest.DONE & this.status == 200 ) {
                 
                 api_response = JSON.parse(this.responseText);
-                $('#favoritePetText').text(api_response.body);
-                $('#favoritePetText').addClass("vote-saved");
-                $('#favoritePetText').addClass("disabled");
+                $('#favouritePetText').text(api_response.body);
+                $('#favouritePetText').addClass("vote-saved");
+                $('#favouritePetText').addClass("disabled");
+                loadSummaryData();
             }
         };
         xhttp.open("POST", url , true);
         xhttp.setRequestHeader("Content-type", "application/json");
-        xhttp.send('{"question":"favorite pet","answer":"'+ favoritePet + '"}');
+        xhttp.send('{"question":"favourite pet","answer":"'+ favouritePet + '"}');
         
     }
+    function loadSummaryData(){
+        var url = "https://api.handsonbigdata.com/survey-summary?question=favourite pet";
+        
+        
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == XMLHttpRequest.DONE & this.status == 200 ) {
+                
+                var api_response = JSON.parse(this.responseText);
+                global_data = JSON.parse( api_response.body);
+                console.log(global_data);
+                
+                if ( global_data.summary ){
+                    console.log('!!here we are');
+                    draw_pie(global_data.summary);
+                    show_map(global_data);
+                }else{
+                    document.getElementById("main-result").innerHTML = "<h1>Not enough data yet!</h1>";
+                }
+            }
+        };
+        xhttp.open("GET", url , true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        //xhttp.send('{"question":"favourite pet","group":"total"}');
+        xhttp.send(null);
+        // call to the api
+        document.getElementById("country-graph").innerHTML = "Global";
+        
+    }
+    var global_data = null
+    $("#map-results").load("map-results.html"); 
+    //var data =[];
+    //var data_countries=[]; 
+    loadSummaryData();
   </script>
 </body>
 

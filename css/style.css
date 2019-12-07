@@ -1,3 +1,15 @@
+
+#img1 {display:block;}
+#img2 {display:none}
+
+
+@media all and (max-width: 499px) {
+    #img1 {display: none;}
+    #img2 {display: block;}
+
+    #map-view {width: 300px; height:300px; }
+}
+
 body{
     background: #333;
     color: #fff;
@@ -13,12 +25,49 @@ img.nav-link {
     height: 52px;
 }
 
-#home-section {
-    background: url('../img/home.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    min-height: 700px;
+.scaling-svg{
+  position: absolute;
+  left: 0;
+  top: 0;
+}  
+
+@media all and (max-width: 499px) {
+  #home-section
+  {
+    background: url('../img/home.jpg');   
+  }
+  .scaling-svg{ 
+    height: 300px;
+    width: 300px;
+  }
+  #graph-container{
+    height: 300px;
+    width: 300px;
+  }
+  
+}
+
+@media all and (min-width: 500px) {
+  #home-section {
+      background: url('../img/home.jpg');
+      background-repeat: no-repeat;
+      background-size: cover  ;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 700px;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+  }
+  #map-view {width:450px;height: 450px; }
+  .scaling-svg{ 
+    height: 400px;
+    width: 100%;
+  }
+  #graph-container{
+    height: 400px;
+    width: 400px;
+  }
 }
 
 #home-section .dark-overlay {
@@ -26,7 +75,7 @@ img.nav-link {
     left: 0;
     width: 100%;
     min-height: 700px;
-    background-color: rgba(0,0,0, 0.7);
+    background-color: rgba(0,0,0, 0.4);
 }
 
 #home-section .home-inner {
@@ -59,13 +108,7 @@ img.nav-link {
       color: seashell;
   }
 
-.scaling-svg{
-    position: absolute;
-    height: 500px;
-    width: 100%;
-    left: 0;
-    top: 0;
-}  
+
 g {
     padding: 0;
     left: 0;
@@ -112,3 +155,6 @@ g {
     left: auto;
     margin: 0;
   }
+
+
+

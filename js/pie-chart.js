@@ -1,166 +1,15 @@
-function draw_pie_chart(){
-    var svg = d3.select("#pie_chart")
-       // .append("svg")
-       // .attr('class','scaling-svg')
-        .append("g")
-
-    svg.append("g")
-        .attr("class", "slices");
-    svg.append("g")
-        .attr("class", "labels");
-    svg.append("g")
-        .attr("class", "lines");
-
-
-    var width = 500,
-        height = 250,
-        radius = Math.min(width, height) / 2;
-
-    var pie = d3.layout.pie()
-        .sort(null)
-        .value(function(d) {
-            return d.value;
-        });
-
-    var arc = d3.svg.arc()
-        .outerRadius(radius * 0.8)
-        .innerRadius(radius * 0.4);
-
-    var outerArc = d3.svg.arc()
-        .innerRadius(radius * 0.9)
-        .outerRadius(radius * 0.9);
-
-    svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-    var key = function(d){ return d.data.label; };
-
-    var color = d3.scale.ordinal()
-        .domain(["Lorem ipsum", "dolor sit", "amet", "consectetur", "adipisicing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt"])
-        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-
-    function randomData (){
-        var labels = color.domain();
-        return labels.map(function(label){
-            return { label: label, value: Math.random() }
-        });
-    }
-
-    change(randomData());
-
-    d3.select(".randomize")
-        .on("click", function(){
-            change(randomData());
-        });
-
-
-    function change(data) {
-
-        /* ------- PIE SLICES -------*/
-        var slice = svg.select(".slices").selectAll("path.slice")
-            .data(pie(data), key);
-
-        slice.enter()
-            .insert("path")
-            .style("fill", function(d) { return color(d.data.label); })
-            .attr("class", "slice");
-
-        slice		
-            .transition().duration(1000)
-            .attrTween("d", function(d) {
-                this._current = this._current || d;
-                var interpolate = d3.interpolate(this._current, d);
-                this._current = interpolate(0);
-                return function(t) {
-                    return arc(interpolate(t));
-                };
-            })
-
-        slice.exit()
-            .remove();
-
-        /* ------- TEXT LABELS -------*/
-
-        var text = svg.select(".labels").selectAll("text")
-            .data(pie(data), key);
-
-        text.enter()
-            .append("text")
-            .attr("dy", ".35em")
-            .text(function(d) {
-                return d.data.label;
-            });
-        
-        function midAngle(d){
-            return d.startAngle + (d.endAngle - d.startAngle)/2;
-        }
-
-        text.transition().duration(1000)
-            .attrTween("transform", function(d) {
-                this._current = this._current || d;
-                var interpolate = d3.interpolate(this._current, d);
-                this._current = interpolate(0);
-                return function(t) {
-                    var d2 = interpolate(t);
-                    var pos = outerArc.centroid(d2);
-                    pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
-                    return "translate("+ pos +")";
-                };
-            })
-            .styleTween("text-anchor", function(d){
-                this._current = this._current || d;
-                var interpolate = d3.interpolate(this._current, d);
-                this._current = interpolate(0);
-                return function(t) {
-                    var d2 = interpolate(t);
-                    return midAngle(d2) < Math.PI ? "start":"end";
-                };
-            });
-
-        text.exit()
-            .remove();
-
-        /* ------- SLICE TO TEXT POLYLINES -------*/
-
-        var polyline = svg.select(".lines").selectAll("polyline")
-		.data(pie(data), key);
-	
-        polyline.enter()
-            .append("polyline");
-
-        polyline.transition().duration(1000)
-            .attrTween("points", function(d){
-                this._current = this._current || d;
-                var interpolate = d3.interpolate(this._current, d);
-                this._current = interpolate(0);
-                return function(t) {
-                    var d2 = interpolate(t);
-                    var pos = outerArc.centroid(d2);
-                    pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
-                    return [arc.centroid(d2), outerArc.centroid(d2), pos];
-                };			
-            });
-        
-        polyline.exit()
-            .remove();
-    };
-}
-var color = d3.scale.ordinal()
-        .domain(["dog", "cat", "bird", "turtle", "duck", "fish", "mouse", "snake", "koala"])
-        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"]);
-var data = []
-
-// Example from Nick
 function pieChart() {
+    
     var _chart = {};
 
-    var _width = 500, _height = 500,
+    var _width = 300, _height = 300,
             _data = [],
             _colors = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"],//d3.scale.category20(),
             _svg,
             _bodyG,
             _pieG,
-            _radius = 200,
-            _innerRadius = 100;
+            _radius = 150,
+            _innerRadius = 50;
 
     _chart.render = function () {
         if (!_svg) {
@@ -176,7 +25,7 @@ function pieChart() {
     function renderBody(svg) {
         if (!_bodyG)
             _bodyG = svg.append("g")
-                    .attr("class", "body");
+                    .attr("class", "scaling-svg");
 
         renderPie();
     }
@@ -209,8 +58,8 @@ function pieChart() {
 
     function renderSlices(pie, arc) {
         var color = d3.scale.ordinal()
-    .domain(["dog", "cat", "bird", "turtle", "duck", "fish", "mouse", "snake", "koala"])
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"]);
+                    .domain(["dog", "cat", "bird", "turtle", "duck", "fish", "mouse", "snake", "koala"])
+                    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"]);
         var slices = _pieG.selectAll("path.arc")
                 .data(pie(_data)); // <-B
 
@@ -315,48 +164,37 @@ function update() {
 }
 
        
-function loadSummaryData(){
-    var url = "https://api.handsonbigdata.com/survey-summary?question=favourite pet&group=total";
-    
-    var labels = color.domain();
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == XMLHttpRequest.DONE & this.status == 200 ) {
-            
-            var api_response = JSON.parse(this.responseText);
-            var response_body =JSON.parse( api_response.body);
-            console.log(response_body.summary);
-            var data_summary = response_body.summary;
-            for (element in data_summary) {
-                console.log(element);
-                console.log(data_summary[element]);
-                data.push({id: element, value: data_summary[element]});
-            }
-            /*data = data_summary.foreach(function (row){
-                return {id: Object.key(row), value: row};
-                });*/
-            console.log('logdata'+data[1].id);    
-            
-            //data_summary = response_body.summary
-            //data = data_summary
-            draw_pie();
-        }
-    };
-    xhttp.open("GET", url , true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    //xhttp.send('{"question":"favourite pet","group":"total"}');
-    xhttp.send(null);
-    // call to the api
-    
-}
 
-function draw_pie() {
+
+function draw_pie(data_summary) {
+    var data = translate2chartData(data_summary);
     //loadSummaryData();
-    var chart = pieChart()
-            .radius(200)
-            .innerRadius(100)
-            .data(data);
+    if (screen.width > 499 ){
+        
+        var chart = pieChart()
+                    .radius(180)
+                    .innerRadius(80)
+                    .data(data);
+    }else{
+        var chart = pieChart()
+                    .radius(140)
+                    .innerRadius(60)
+                    .data(data);
+    }
 
     chart.render();
+}
+function translate2chartData(data_summary){
+    var data = [];
+    for (element in data_summary ) {
+        // only values higher than 0 are shown on the pie
+        if ( data_summary[element] > 0){
+          console.log(element);
+          console.log(data_summary[element]);
+          data.push({id: element, value: data_summary[element]});
+        }
+    }
+
+    return data;
 }
 

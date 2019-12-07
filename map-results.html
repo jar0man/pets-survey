@@ -1,0 +1,156 @@
+        
+<div id="map-view" >    
+</div>
+<script>
+    var map = L.map('map-view', 
+    {
+        center: [45.001379, -36.429741],
+        zoom: 2,
+        crs: L.CRS.EPSG3857,
+    });
+    var vargeoJsonLayer;
+
+// Create map object    
+function show_map(data){
+
+    // Earth Picture
+    var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });    
+    // Adding earth picture layer to the map
+    OpenStreetMap_Mapnik.addTo(map);
+
+    var geojson = build_gejson(data.countries);
+    loadMap(geojson);    
+   
+}
+
+function loadMap(geoJsonParam) {
+    
+    vargeoJsonLayer = L.geoJson(geoJsonParam,{
+                            pointToLayer: (feature, latlng) => {
+                                // Circle to embed the picture into 
+                                return new L.circle([feature.geometry.coordinates[1],
+                                                     feature.geometry.coordinates[0]], 
+                                                   {radius: 150000, color: "#f3fce5", 
+                                                     weight: 2,fillColor:"#f3fce5",fillOpacity:0.1})
+                                ;         
+                            },
+                            onEachFeature: onEachFeature})
+
+}
+function resetHighlight(e) {
+    vargeoJsonLayer.resetStyle(e.target);
+}
+function zoomToFeature(e) {
+    var country_name = e.target.feature.properties.country_name;
+
+    console.log(e.target.feature.properties.country_name);
+    draw_pie(global_data.countries[country_name].results);
+    document.getElementById("country-graph").innerHTML = country_name;
+}
+function highlightFeature(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 3,
+        color: '#00FF00',
+        dashArray: '',
+        fillOpacity: 0.8
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+    }
+}
+function onEachFeature(feature, layer) {
+     var petUrl='http://www.handsonbigdata.com/developments/pets-survey/img/64px-'+ feature.properties.favourite_pet + '.png';      
+     layer.on(
+         {
+             mouseover: highlightFeature,
+             mouseout: resetHighlight,
+             click: zoomToFeature
+         }
+     );
+     map.addLayer(layer);      
+     // Get bounds for the image
+     var imageBounds = layer.getBounds();
+     
+     // Creating image and adding it to the map
+     var petImage = L.imageOverlay(petUrl,imageBounds,{alt:feature.properties.favourite_pet});
+     petImage.addTo(map);
+     
+     console.log('Added pet image:'+feature.properties.country_name);    
+   
+  }
+
+function build_gejson(json_data){
+    // example output
+    console.log(json_data);
+    var example_output=`{"type": "FeatureCollection",
+                         "features":[
+                            {"type":"Feature",
+                             "geometry": {
+                                    "type":"Point",
+                                    "coordinates":[ -3.7492199999999999, 40.46366700000001]
+                                },
+                             "properties":{
+                                    "country_name": "Spain",
+                                    "radius":  100,
+                                    "favourite_pet" : "dog"
+                                }
+                            },
+                            {"type":"Feature",
+                             "geometry": {
+                                    "type":"Point",
+                                    "coordinates":[ -3.435973, 55.378051]
+                                },
+                             "properties":{
+                                    "country_name": "UK",
+                                    "radius":  100,
+                                    "favourite_pet" : "cat"
+                                }
+                            }
+                          ]
+                       }`;
+    var output = `{"type": "FeatureCollection",
+                         "features":[ ${get_features(json_data)} 
+                          ]
+                    }`;
+    console.log(output);
+    return JSON.parse(output);
+}
+function get_features(countries){
+    var features ='';
+    console.log('number of countries:'+countries.length);
+    for (var country_name in countries){
+        features+=`{"type":"Feature",
+                             "geometry": {
+                                    "type":"Point",
+                                    "coordinates":[ ${countries[country_name].location.longitude}, ${countries[country_name].location.latitude}]
+                                },
+                             "properties":{
+                                    "country_name": "${country_name}",
+                                    "radius":  100,
+                                    "favourite_pet" : "${get_country_favourite_pet(countries[country_name].results)}"
+                                }
+                    },`;
+    }
+
+    return features.replace(/,\s*$/, ""); // removing last comma
+}
+function get_country_favourite_pet(results){
+    var maximum_vote = 0;
+    var most_loved = ''
+    for (var pet in results){
+        if (Number(results[pet]) >= Number(maximum_vote)){
+            most_loved = pet;
+            maximum_vote = results[pet];
+        }
+    }
+
+    return most_loved;
+
+}
+</script>
