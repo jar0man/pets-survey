@@ -81,7 +81,7 @@ function onEachFeature(feature, layer) {
      var petImage = L.imageOverlay(petUrl,imageBounds,{alt:feature.properties.favourite_pet});
      petImage.addTo(map);
      
-     console.log('Added pet image:'+feature.properties.country_name);    
+     console.log('Added pet image to map:'+feature.properties.country_name);    
    
   }
 
